@@ -1,0 +1,73 @@
+class Interface
+{
+   field string welcomeMessage1, welcomeMessage2;
+   field string scoreMessage;
+   field string finalMessage1, finalMessage2, finalMessage3;
+
+   
+   
+   constructor Interface new()
+   {
+      // initialize strings
+      let welcomeMessage1 = "Controls: up / down arrows ";
+      let welcomeMessage2 = "Press esc to exit the current race";
+
+     
+
+      let scoreMessage = "score: ";
+
+      let finalMessage1 = "You lose";
+      let finalMessage2 = "Your game score: ";
+      let finalMessage3 = "Press enter to continue";
+
+
+
+      return this;
+   }
+
+
+   method void drawWelcomeWindow()
+   {
+      do Output.moveCursor(9, 16);
+      do Output.printString(welcomeMessage1);
+      do Output.moveCursor(10, 16);
+      do Output.printString(welcomeMessage2);
+      return;
+   }
+
+   method void drawPlayerScore(int score)
+   {
+      do Output.moveCursor(0, 0);
+      do Output.printString(scoreMessage);
+      do Output.printInt(score);
+   
+      return;
+   }
+
+   method void drawFinalWindow(int score)
+   {
+      do Output.moveCursor(10, 18);
+      do Output.printString(finalMessage1);
+      do Output.moveCursor(11, 18);
+      do Output.printString(finalMessage2);
+      do Output.printInt(score);
+      do Output.moveCursor(12, 18);
+      do Output.printString(finalMessage3);
+
+      return;
+   }
+
+   method void dispose()
+   {
+      do Memory.deAlloc(welcomeMessage1);
+      do Memory.deAlloc(welcomeMessage2);
+
+      do Memory.deAlloc(scoreMessage);
+
+      do Memory.deAlloc(finalMessage1);
+      do Memory.deAlloc(finalMessage2);
+      do Memory.deAlloc(finalMessage3);
+
+      return;
+   }
+}
