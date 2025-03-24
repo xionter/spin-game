@@ -3,12 +3,11 @@ class Game
    field boolean isRunning;
 
    field int enemiesCount, enemySpawnRate;
-   field int score, roadSpeed, enemiesSpeed, enemiesAcceleration;
+   field int score, enemiesSpeed, enemiesAcceleration;
 
    field PlayerCar player;
    field Array enemies;
    field Array enemySpawnYCoords;
-//   field Road road;           
    field Random random;     
    field Interface interface;
    
@@ -38,9 +37,6 @@ class Game
          let i = i + 1;
       }
 
-      // initialize road
-      //let road = Road.new();
-      let roadSpeed = 10;
 
       // initialize enemy spawn coordinates
       let enemySpawnYCoords = Array.new(4);
@@ -99,7 +95,6 @@ class Game
             if (key = 132) { do player.move(1, 0); }  // down arrow   
 
             do moveEnemies();
-            //do road.moveMarking(roadSpeed);
 
             let deadCarsCount = handleCarsDeaths();
             let score = score + deadCarsCount;
@@ -129,7 +124,6 @@ class Game
       {
          if ((Utils.mod(score, 5) = 0) & (score > 0))
          {
-            let roadSpeed = roadSpeed + enemiesAcceleration;
             let enemiesSpeed = enemiesSpeed + enemiesAcceleration;
          }
       }
@@ -170,7 +164,6 @@ class Game
    method void drawFrame()
    {
       do Screen.clearScreen();
-     // do road.drawMarking();
       do player.draw();
       do drawEnemies();
       do interface.drawPlayerScore(score);
@@ -301,7 +294,6 @@ class Game
       do player.dispose();
       do Memory.deAlloc(enemies);
       do Memory.deAlloc(enemySpawnYCoords);
-      //do road.dispose();
       do random.dispose();
       do interface.dispose();
       do Memory.deAlloc(this);
