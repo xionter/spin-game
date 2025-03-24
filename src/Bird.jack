@@ -1,0 +1,47 @@
+class Bird
+{
+    field int x, y;
+    field int xSize, ySize;
+
+    constructor Bird new(int X, int Y)
+    {
+        let x = X;
+        let y = Y;
+        return this;
+    }
+
+    method boolean onScreen()
+    {
+        return ((1 < x) & (x + xSize < 508)) & 
+                ((1 < y) & (y + ySize) < 255);
+    }
+
+    method int GetX()
+    {
+        return x;
+    }
+
+    method int GetY()
+    {
+        return y;
+    }
+
+    method void draw()
+    {
+        //TODO
+        return;
+    }
+
+    method void move(int dx, int dy)
+    {
+        let x = x + dx;
+        let y = y + dy;
+        return;
+    }
+
+    method void dispose()
+    {
+        do Memory.deAlloc(this);
+        return;
+    }
+}
