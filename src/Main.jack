@@ -3,11 +3,11 @@ class Main
    function void main()
    {
       var Game game;
-
       while (true)
       {
          do Screen.clearScreen();
          do Sys.wait(250);
+         
          let game = Game.new();
          do game.run();
          do game.dispose();

@@ -4,7 +4,7 @@ class Game
 
    field int enemiesCount, enemySpawnRate;
    field int score, enemiesSpeed, enemiesAcceleration;
-
+   field GameInterface gameInterface;
    field PlayerCar player;
    field Array enemies;
    field Array enemySpawnYCoords;
@@ -60,12 +60,9 @@ class Game
       let randomSeed = handleStartGame();
       let random = Random.new(randomSeed);
 
-      // easy:   rate = once per 9 frames | acceleration = 1
-      // medium: rate = once per 8 frames | acceleration = 2
-      // hard:   rate = once per 7 frames | acceleration = 3
       let enemiesAcceleration = 123 ;
       let enemySpawnRate = 23;
-
+      
       do handleGameProcess();
 
       do Screen.clearScreen();
@@ -91,8 +88,8 @@ class Game
          if (tick = 2500)
          {
             if (key = 140) { let isRunning = false; }  // esc key
-            if (key = 130) { do player.move(-1, 0); }  // up arrow
-            if (key = 132) { do player.move(1, 0); }  // down arrow   
+            if (key = 130) { do player.move(-1, 0); }  // left arrow
+            if (key = 132) { do player.move(1, 0); }  // right arrow   
 
             do moveEnemies();
 
@@ -134,23 +131,15 @@ class Game
    method int handleStartGame()
    {
       var char key;
-
-      let key = Keyboard.keyPressed();
-      do interface.drawWelcomeWindow();
-
-      return handleDifficultyChoosing(key);
-   }
-
-   method int handleDifficultyChoosing(char key)
-   {
       var int randomSeed;
 
+      let key = Keyboard.keyPressed();А
+      do interface.drawWelcomeWindow();
       while (~(key = 128)) // enter key
       {
          let key = Keyboard.keyPressed();
          let randomSeed = Utils.mod(randomSeed + 1, 32767);
       }
-
       return randomSeed;
    }
 
@@ -164,6 +153,7 @@ class Game
    method void drawFrame()
    {
       do Screen.clearScreen();
+      do GameInterface.DrawSky();
       do player.draw();
       do drawEnemies();
       do interface.drawPlayerScore(score);

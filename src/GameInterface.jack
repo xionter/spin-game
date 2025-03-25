@@ -1,0 +1,14 @@
+class GameInterface
+{
+    constructor GameInterface new()
+    {
+        return this;
+    }
+
+    method void DrawSky()
+    {
+        do Screen.drawLine(128, 0, 128, 255);
+        do Screen.drawLine(386, 0, 386, 255);
+        return;
+    }
+}
