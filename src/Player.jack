@@ -18,6 +18,17 @@ class Player
         return this;
     }
 
+    method int GetX()
+    {
+        return centralX;
+    }
+
+    method int GetY()
+    {
+        return centralY;
+    }
+
+
     method void mainDraw(int position)
     {
         do Screen.setColor(true);

@@ -1,310 +1,247 @@
 class Game
 {
-   field boolean isRunning;
+    field boolean isRunning;
 
-   field int enemiesCount, enemySpawnRate;
-   field int enemiesSpeed, enemiesAcceleration;
-   
+    field int birdStartX, birdStartY;
+    field int birdSpeedX, birdSpeedY; 
+    field int birdTiming; 
+    field int birdSpawnTimer; 
 
-   
-   field Array enemies;
-   field Array enemySpawnYCoords;
-   field Random random;     
-   
-   field Interface interface;
+    field Bird bird; 
+    field Random random;     
 
-   field Player player;
-   field GameInterface gameInterface;
-   field int score, health, position;
-   field int height;
-   field boolean win;
+    field Interface interface;
 
-   constructor Game new()
-   {
-      var EnemyCar currentEnemy;
-      var int i;
+    field Player player;
+    field GameInterface gameInterface;
+    field int score, health, position;
+    field int height;
+    field boolean win;
 
-      // initialize interface
-      let interface = Interface.new();
-      
-      let win = false;
+    constructor Game new()
+    {
+        // initialize interface
+        let interface = Interface.new();
 
-      // initialize player
-      let health = 3;
-      let player = Player.new(250, 50, 6, 16, 10);
-      let position = 0;
+        let win = false;
 
-      // initialize enemies
-      let enemiesCount = 16;
-      let enemiesSpeed = 10;
-      let enemies = Array.new(enemiesCount);
-      let i = 0;
-      while (i < enemiesCount)
-      {
-         let enemies[i] = EnemyCar.new(16, 16);
-         let currentEnemy = enemies[i];
-         do currentEnemy.die();
+        // initialize player
+        let health = 3;
+        let player = Player.new(250, 50, 6, 16, 10);
+        let position = 0;
 
-         let i = i + 1;
-      }
+        //init bird fields
+        let birdSpeedX = 2; 
+        let birdSpeedY = 1;
+        let birdTiming = 100;
+        let birdSpawnTimer = 0;
+        let bird = Bird.new(0, 0);
+        do bird.die();
 
+        // initialize player score
+        let score = 0;
 
-      // initialize enemy spawn coordinates
-      let enemySpawnYCoords = Array.new(4);
-      let enemySpawnYCoords[0] = 16;
-      let enemySpawnYCoords[1] = 80;
-      let enemySpawnYCoords[2] = 144;
-      let enemySpawnYCoords[3] = 208;
+        return this;
+    }
 
-      // initialize player score
-      let score = 0;
+    method void run()
+    {
+        var char key;
 
-      return this;
-   }
+        let gameInterface = GameInterface.new();
+        do handleStartGame();
+        do handleStartCutscene();
 
-   /** Runs the game: handles the user's inputs and moves the car accordingly */
-   method void run()
-   {
-      var char key;
+        do handleGameProcess();
 
-      let gameInterface = GameInterface.new();
-      do handleStartGame();
-      do handleStartCutscene();
-      let enemiesAcceleration = 123 ;
-      let enemySpawnRate = 23;
-      
-      do handleGameProcess();
+        do Screen.clearScreen();
+        do interface.drawFinalWindow(score, height, win);
+        do handleEndGame();
 
-      do Screen.clearScreen();
-      do interface.drawFinalWindow(score, height, win);
-      do handleEndGame();
-
-      return;
-   }
-
-   method void handleGameProcess()
-   {
-      var char key;
-      var int tick, frame;
-      var int rotation;
-      let rotation = 0;
-      let isRunning = true;
-      let tick = 0;
-      let frame = 0;
-
-      while (isRunning)
-      {
-         let key = Keyboard.keyPressed();
-
-         if (tick = 2500)
-         {
-            if (key = 140) { let isRunning = false; }  // esc key
-
-            if (key = 130) 
-            { 
-               if (position = 0) { let rotation = 1; }
-               let position = position + 1;
-               if (position > 3) 
-               { 
-                  let position = 0; 
-                  if (rotation = 1) { let score = score + 100;}
-                  let rotation = 0; 
-               }
-               
-            }  // left arrow
-
-            if (key = 132) 
-            { 
-               if (position = 0) { let rotation = 2; }
-               let position = position - 1;
-               if (position = 0)
-               {
-                  if (rotation = 2) { let score = score + 100;}
-                  let rotation = 0; 
-               }
-               if (position < 0) 
-               { 
-                  let position = 3;
-               }
-            }  // right arrow   
+        return;
+    }
 
 
-            // do moveEnemies(); TODO for andrew if height < 1000
+    method void handleGameProcess()
+    {
+        var char key;
+        var int tick, birdTick, frame;
+        var int rotation;
+        let rotation = 0;
+        let isRunning = true;
+        let tick = 0;
+        let birdTick = 0;
+        let frame = 0;
 
-            do drawFrame();
-            if (height = 1040) 
+        while (isRunning)
+        {
+            let key = Keyboard.keyPressed();
+
+            if (tick = 2500)
             {
-               let isRunning = false;
-               if (position = 0) { let win = true; }
-               if (position = 1) { let win = true; }
+                if (key = 140) { let isRunning = false; }  // esc key
+
+                if (key = 130) 
+                { 
+                    if (position = 0) { let rotation = 1; }
+                    let position = position + 1;
+                    if (position > 3) 
+                    { 
+                        let position = 0; 
+                        if (rotation = 1) { let score = score + 100;}
+                        let rotation = 0; 
+                    }
+                }  // left arrow
+
+                if (key = 132) 
+                { 
+                    if (position = 0) { let rotation = 2; }
+                    let position = position - 1;
+                    if (position = 0)
+                    {
+                        if (rotation = 2) { let score = score + 100;}
+                        let rotation = 0; 
+                    }
+                    if (position < 0) 
+                    { 
+                        let position = 3;
+                    }
+                }  
+
+                if (bird.GetAlive())
+                {
+                    do bird.move(birdSpeedX, 0);
+
+                    if ((birdSpeedX > 0 & bird.GetX() > 510) | 
+                            (birdSpeedX < 0 & bird.GetX() < -16))
+                    {
+                        do bird.die();
+                    }
+                }
+
+
+                let birdSpawnTimer = birdSpawnTimer + 1;
+                if (birdSpawnTimer > 100)  
+                {
+                    do trySpawnBird();
+                    let birdSpawnTimer = 0;
+                }
+
+                do drawFrame();
+                if (height = 1040) 
+                {
+                    let isRunning = false;
+                    if (position = 0) { let win = true; }
+                    if (position = 1) { let win = true; }
+                }
+                let tick = 0;
+                let height = height + 10;
+                let frame = frame + 1;
             }
-            let tick = 0;
-            let height = height + 10;
-            let frame = frame + 1;
-         }
+            
+            // Add this block to draw bird every 500 ticks
+            if (birdTick > 500)
+            {
+                if (bird.GetAlive())
+                {
+                    do bird.draw();
+                }
+                let birdTick = 0;
+            }
 
-         if (frame = enemySpawnRate)
-         {
-            //do trySpawnEnemy();
+            let tick = tick + 1;
+            let birdTick = birdTick + 1;
 
-            let frame = 0;
-         }
-
-         let tick = tick + 1;
-      }
-
-      return;
-   }
+        }
+        return;
+    }
 
 
-   method void handleStartGame()
-   {
-      var char key;
+    method void trySpawnBird()
+    {
+        if (~bird.GetAlive())
+        {
+            let birdStartX = 0;
+            let birdSpeedX = 2; 
 
-      let key = Keyboard.keyPressed();
-      do interface.drawWelcomeWindow();
-      while (~(key = 128)) // enter key
-      {
-         let key = Keyboard.keyPressed();
-         
-      }
-      return;
-   }
+            let birdStartY = 50; 
 
-   method void handleStartCutscene()
-   {
-      var int frame;
-      let frame = 0;
-      while (frame < 170)
-      {
-         do Screen.clearScreen();
-         do player.mainDraw(position);
-         do gameInterface.DrawSky();
-         do Screen.setColor(1);
-         do Screen.drawLine(216 + frame, 83, 386, 83);
-         do Sys.wait(250);
-         let frame = frame + 34;
-      }
-      return;
-   } 
+            do bird.setAlive(true);
+            do bird.SetX(birdStartX);
+            do bird.SetY(birdStartY);
+        }
+        return;
+    }
 
-   method void handleEndGame()
-   {
-      while (~(Keyboard.keyPressed() = 128)) { } // enter key
-      return;
-   }
+    method void drawFrame()
+    {
+        do Screen.clearScreen();
+        do gameInterface.DrawInterface(health, score, height);
+        do player.mainDraw(position);
+        if (height > 1000)
+        {
+            do Screen.setColor(1);
+            do Screen.drawRectangle(128, 255 - (((height - 1000) / 10) * 43), 386, 255);
+        }
 
-   method void drawFrame()
-   {
-      do Screen.clearScreen();
-      do gameInterface.DrawInterface(health, score, height);
-      do player.mainDraw(position);
-      if (height > 1000)
-      {
-         do Screen.setColor(1);
-         do Screen.drawRectangle(128, 255 - (((height - 1000) / 10) * 43), 386, 255);
-      }
-      //do drawEnemies();
+        // Draw bird if alive
+        if (bird.GetAlive())
+        {
+            do bird.draw();
+        }
 
-      return;
-   }
+        return;
+    }
+    
+    method boolean checkBirdCollision()
+    {
+        return false;
+        //TODO
+    }
 
-   method void moveEnemies()
-   {
-      var EnemyCar currentEnemy;
-      var int i;
+    method void dispose()
+    {
+        do Memory.deAlloc(bird);
+        do random.dispose();
+        do interface.dispose();
+        do Memory.deAlloc(this);
 
-      let i = 0;
-      while (i < enemiesCount)
-      {
-         let currentEnemy = enemies[i];
+        return;
+    }
+    method void handleStartGame()
+    {
+        var char key;
 
-         if (currentEnemy.isAlive())
-         {
-            do currentEnemy.move(0, enemiesSpeed);
-         }
+        let key = Keyboard.keyPressed();
+        do interface.drawWelcomeWindow();
+        while (~(key = 128)) // enter key
+        {
+            let key = Keyboard.keyPressed();
 
-         let i = i + 1;
-      }
+        }
+        return;
+    }
 
-      return;
-   }
+    method void handleStartCutscene()
+    {
+        var int frame;
+        let frame = 0;
+        while (frame < 170)
+        {
+            do Screen.clearScreen();
+            do player.mainDraw(position);
+            do gameInterface.DrawSky();
+            do Screen.setColor(1);
+            do Screen.drawLine(216 + frame, 83, 386, 83);
+            do Sys.wait(250);
+            let frame = frame + 34;
+        }
+        return;
+    } 
 
-   method void drawEnemies()
-   {
-      var EnemyCar currentEnemy;
-      var int i;
-
-      let i = 0;
-      while (i < enemiesCount)
-      {
-         let currentEnemy = enemies[i];
-
-         if (currentEnemy.isAlive())
-         {
-            do currentEnemy.draw();
-         }
-   
-         let i = i + 1;
-      }
-
-      return;
-   }
-
-   method void trySpawnEnemy()
-   {
-      var EnemyCar newEnemy, currentEnemy;
-      var int case, i;
-
-      let case = random.next(5);
-      if (case < 4)
-      {
-         let i = 0;
-         let currentEnemy = enemies[i];
-         while ((i < (enemiesCount-1)) & (currentEnemy.isAlive()))
-         {
-            let i = i + 1;
-            let currentEnemy = enemies[i];
-         }
-
-         if (~(currentEnemy.isAlive()))
-         {
-            do currentEnemy.reborn(0, enemySpawnYCoords[case]);
-         }
-      }
-
-      return;
-   }
-
-   method boolean conflictHappened(int xEnemy, int yEnemy, int xPlayer, int yPlayer)
-   {
-      var int leftEnemyX, topLeftEnemyY, bottomLeftEnemyY;
-      var int rightPlayerX, topRightPlayerY, bottomRightPlayerY;
-
-      var boolean isConflictFromBelow, isConflictFromAbove;
-
-      let leftEnemyX = xEnemy + 47;
-      let topLeftEnemyY = yEnemy;
-      let bottomLeftEnemyY = yEnemy + 31;
-
-      let rightPlayerX = xPlayer;
-      let topRightPlayerY = yPlayer;
-      let bottomRightPlayerY = yPlayer + 31;
-
-      let isConflictFromBelow = (~(topRightPlayerY > bottomLeftEnemyY)) & (~(topRightPlayerY < topLeftEnemyY)) & (~(rightPlayerX > leftEnemyX));
-      let isConflictFromAbove = (~(bottomRightPlayerY > bottomLeftEnemyY)) & (~(bottomRightPlayerY < topLeftEnemyY)) & (~(rightPlayerX > leftEnemyX));
-
-      return isConflictFromBelow | isConflictFromAbove;
-   }
-   
-   method void dispose()
-   {
-      do Memory.deAlloc(enemies);
-      do Memory.deAlloc(enemySpawnYCoords);
-      do random.dispose();
-      do interface.dispose();
-      do Memory.deAlloc(this);
-      
-      return;
-   }
+    method void handleEndGame()
+    {
+        while (~(Keyboard.keyPressed() = 128)) { } // enter key
+        return;
+    }
 }

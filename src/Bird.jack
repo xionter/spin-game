@@ -2,12 +2,19 @@ class Bird
 {
     field int x, y;
     field int xSize, ySize;
-
+    field boolean isAlive;
     constructor Bird new(int X, int Y)
     {
         let x = X;
         let y = Y;
+        let isAlive = true;
         return this;
+    }
+
+    method void die()
+    {
+        let isAlive = false;
+        return;
     }
 
     method boolean onScreen()
@@ -26,9 +33,42 @@ class Bird
         return y;
     }
 
+    method void SetX(int X)
+    {
+        let x = X;
+        return;
+    }
+    
+    method void SetY(int Y)
+    {
+        let y = Y;
+        return;
+    }
+
+
+    method boolean GetAlive()
+    {
+        return isAlive;
+    }
+
+    method void setAlive(boolean flag)
+    {
+        let isAlive = flag;
+        return;
+    }
+
     method void draw()
     {
-        //TODO
+        if (~isAlive)
+        {
+            return;
+        }
+
+        do Screen.setColor(true);
+        // Simple bird drawing - triangle for now
+        do Screen.drawLine(x, y, x + xSize, y + (ySize / 2));
+        do Screen.drawLine(x + xSize, y + (ySize / 2), x, y + ySize);
+        do Screen.drawLine(x, y + ySize, x, y);
         return;
     }
 
