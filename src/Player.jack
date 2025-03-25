@@ -1,0 +1,173 @@
+class Player
+{
+    field int headX, headY, headRadius, bodyLength, limbYLength;
+
+    field int centralX, centralY;
+    
+    constructor Player new(int x, int y, int r, int body, int limb)
+    {
+        let headX = x;
+        let headY = y;
+        let headRadius = r;
+        let bodyLength = body;
+        let limbYLength = limb;
+
+        let centralX = x;
+        let centralY = y + r + 8;
+
+        return this;
+    }
+
+    method void mainDraw(int position)
+    {
+        do Screen.setColor(true);
+        if (position = 0)
+        {
+            do draw0();
+        }
+        if (position = 1)
+        {
+            do draw1();
+        }
+        if (position = 2)
+        {
+            do draw2();
+        }
+        if (position = 3)
+        {
+            do draw3();
+        }
+
+        return;
+    }
+
+    method void draw0()
+    {
+        //голова
+        do Screen.drawCircle(headX, headY, headRadius);
+        do Screen.setColor(false);
+        do Screen.drawCircle(headX, headY, headRadius - 2);
+
+        do Screen.setColor(true);
+
+        //тело
+        do Screen.drawLine(headX, headY + headRadius, headX, headY + headRadius + bodyLength);
+        do Screen.drawLine(headX - 1, headY + headRadius, headX - 1, headY + headRadius + bodyLength);
+        do Screen.drawLine(headX + 1, headY + headRadius, headX + 1, headY + headRadius + bodyLength); 
+
+        //нога1
+        do Screen.drawLine(headX, headY + headRadius + bodyLength, headX - 5, headY + headRadius + bodyLength + limbYLength);
+        do Screen.drawLine(headX, headY + headRadius + bodyLength + 1, headX - 5, headY + headRadius + bodyLength + limbYLength + 1);
+
+        //нога2
+        do Screen.drawLine(headX, headY + headRadius + bodyLength, headX + 5, headY + headRadius + bodyLength + limbYLength);
+        do Screen.drawLine(headX, headY + headRadius + bodyLength + 1, headX + 5, headY + headRadius + bodyLength + limbYLength + 1);
+
+        //рука1
+        do Screen.drawLine(headX, headY + headRadius + 2, headX - 5, headY + headRadius + 2 + limbYLength);
+        do Screen.drawLine(headX, headY + headRadius + 3, headX - 5, headY + headRadius + 3 + limbYLength);
+
+        //рука1
+        do Screen.drawLine(headX, headY + headRadius + 2, headX + 5, headY + headRadius + 2 + limbYLength);
+        do Screen.drawLine(headX, headY + headRadius + 3, headX + 5, headY + headRadius + 3 + limbYLength);
+
+        return;
+    }
+
+    method void draw1()
+    {
+        do Screen.drawCircle(headX - headRadius - 8, headY + headRadius + 8, headRadius);
+        do Screen.setColor(false);
+        do Screen.drawCircle(headX - headRadius - 8, headY + headRadius + 8, headRadius - 2);
+
+        do Screen.setColor(true);
+
+        //тело
+        do Screen.drawLine(headX - 8, headY + headRadius + 8, headX + 8, headY + headRadius + 8);
+        do Screen.drawLine(headX - 8, headY + headRadius + 8 + 1, headX + 8, headY + headRadius + 8 + 1);
+        do Screen.drawLine(headX - 8, headY + headRadius + 8 - 1, headX + 8, headY + headRadius + 8 - 1);
+
+        //нога1
+        do Screen.drawLine(headX + 8, headY + headRadius + 8, headX + 8 + limbYLength, headY + headRadius + 8 - 5);
+        do Screen.drawLine(headX + 8, headY + headRadius + 8 + 1, headX + 8 + limbYLength, headY + headRadius + 8 - 5 + 1);
+
+        //нога2
+        do Screen.drawLine(headX + 8, headY + headRadius + 8, headX + 8 + limbYLength, headY + headRadius + 8 + 5);
+        do Screen.drawLine(headX + 8, headY + headRadius + 8 + 1, headX + 8 + limbYLength, headY + headRadius + 8 + 5 + 1);
+
+        //рука1
+        do Screen.drawLine(headX - 8 + 2, headY + headRadius + 8, headX - 8 + 2 + limbYLength, headY + headRadius + 8 - 5);
+        do Screen.drawLine(headX - 8 + 2, headY + headRadius + 8 + 1, headX - 8 + 2 + limbYLength, headY + headRadius + 8 + 1 - 5);
+
+        //рука1
+        do Screen.drawLine(headX - 8 + 2, headY + headRadius + 8, headX - 8 + 2 + limbYLength, headY + headRadius + 8 + 5);
+        do Screen.drawLine(headX - 8 + 2, headY + headRadius + 8 + 1, headX - 8 + 2 + limbYLength, headY + headRadius + 8 + 1 + 5);
+
+        return;
+    }
+
+    method void draw2()
+    {
+        //голова
+        do Screen.drawCircle(headX, centralY + headRadius + 8, headRadius);
+        do Screen.setColor(false);
+        do Screen.drawCircle(headX, centralY + headRadius + 8, headRadius - 2);
+
+        do Screen.setColor(true);
+
+        //тело
+        do Screen.drawLine(headX, centralY + 8, headX, headY + headRadius);
+        do Screen.drawLine(headX - 1, centralY + 8, headX - 1, headY + headRadius);
+        do Screen.drawLine(headX + 1, centralY + 8, headX + 1, headY + headRadius); 
+
+        //нога1
+        do Screen.drawLine(headX, headY + headRadius, headX - 5, headY + headRadius - limbYLength);
+        do Screen.drawLine(headX, headY + headRadius + 1, headX - 5, headY + headRadius - limbYLength + 1);
+
+        //нога2
+        do Screen.drawLine(headX, headY + headRadius, headX + 5, headY + headRadius - limbYLength);
+        do Screen.drawLine(headX, headY + headRadius + 1, headX + 5, headY + headRadius - limbYLength + 1);
+
+        //рука1
+        do Screen.drawLine(headX, centralY + 8 - 2, headX - 5, centralY + 8 - 2 - limbYLength);
+        do Screen.drawLine(headX, centralY + 8 - 2 + 1, headX - 5, centralY + 8 - 2 + 1 - limbYLength);
+
+        //рука1
+        do Screen.drawLine(headX, centralY + 8 - 2, headX + 5, centralY + 8 - 2 - limbYLength);
+        do Screen.drawLine(headX, centralY + 8 - 2 + 1, headX + 5, centralY + 8 - 2 + 1 - limbYLength);
+
+        return;
+    }
+
+    method void draw3()
+    {
+        do Screen.drawCircle(headX + headRadius + 8, headY + headRadius + 8, headRadius);
+        do Screen.setColor(false);
+        do Screen.drawCircle(headX + headRadius + 8, headY + headRadius + 8, headRadius - 2);
+
+        do Screen.setColor(true);
+
+        //тело
+        do Screen.drawLine(headX + 8, headY + headRadius + 8, headX - 8, headY + headRadius + 8);
+        do Screen.drawLine(headX + 8, headY + headRadius + 8 + 1, headX - 8, headY + headRadius + 8 + 1);
+        do Screen.drawLine(headX + 8, headY + headRadius + 8 - 1, headX - 8, headY + headRadius + 8 - 1);
+
+        //нога1
+        do Screen.drawLine(headX - 8, headY + headRadius + 8, headX - 8 - limbYLength, headY + headRadius + 8 - 5);
+        do Screen.drawLine(headX - 8, headY + headRadius + 8 + 1, headX - 8 - limbYLength, headY + headRadius + 8 - 5 + 1);
+
+        //нога2
+        do Screen.drawLine(headX - 8, headY + headRadius + 8, headX - 8 - limbYLength, headY + headRadius + 8 + 5);
+        do Screen.drawLine(headX - 8, headY + headRadius + 8 + 1, headX - 8 - limbYLength, headY + headRadius + 8 + 5 + 1);
+
+        //рука1
+        do Screen.drawLine(headX + 8 - 2, headY + headRadius + 8, headX + 8 - 2 - limbYLength, headY + headRadius + 8 - 5);
+        do Screen.drawLine(headX + 8 - 2, headY + headRadius + 8 + 1, headX + 8 - 2 - limbYLength, headY + headRadius + 8 + 1 - 5);
+
+        //рука1
+        do Screen.drawLine(headX + 8 - 2, headY + headRadius + 8, headX + 8 - 2 - limbYLength, headY + headRadius + 8 + 5);
+        do Screen.drawLine(headX + 8 - 2, headY + headRadius + 8 + 1, headX + 8 - 2 - limbYLength, headY + headRadius + 8 + 1 + 5);
+
+        return;
+    }
+}

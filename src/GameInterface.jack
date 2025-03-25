@@ -1,14 +1,71 @@
 class GameInterface
 {
+    field string scoreMessage, heightMessage;
+
     constructor GameInterface new()
     {
+        let scoreMessage = "score: ";
+        let heightMessage = "height: ";
         return this;
+    }
+
+    method void DrawInterface(int health, int score, int height)
+    {
+        do DrawSky();
+        do DrawHealth(health);
+        do DrawScore(score, height);
+        return;
     }
 
     method void DrawSky()
     {
+        do Screen.setColor(1);
         do Screen.drawLine(128, 0, 128, 255);
         do Screen.drawLine(386, 0, 386, 255);
         return;
     }
+
+    method void DrawHealth(int playerHealth)
+    {
+        do Screen.setColor(1);
+        do Screen.drawCircle(400, 10, 5);
+        do Screen.drawCircle(415, 10, 5);
+        do Screen.drawCircle(430, 10, 5);
+        do Screen.setColor(0);
+        if (playerHealth = 2)
+        {
+            do Screen.drawCircle(430, 10, 4);
+            
+        }
+        if (playerHealth = 1)
+        {
+            do Screen.drawCircle(430, 10, 4);
+            do Screen.drawCircle(415, 10, 4);
+        }
+        if (playerHealth = 0)
+        {
+            do Screen.drawCircle(430, 10, 4);
+            do Screen.drawCircle(415, 10, 4);
+            do Screen.drawCircle(400, 10, 4);
+        }
+        return;
+    }
+
+    method void DrawScore(int gameScore, int height)
+    {
+        do Output.moveCursor(0, 0);
+        do Output.printString(scoreMessage);
+        do Output.printInt(gameScore);
+        do Output.println();
+        do Output.printString(heightMessage);
+        do Output.printInt(height);
+        return;
+    }
+
+    method void dispose()
+   {
+      do Memory.deAlloc(scoreMessage);
+      do Memory.deAlloc(this);
+      return;
+   }
 }

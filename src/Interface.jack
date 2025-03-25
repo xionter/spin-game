@@ -1,23 +1,28 @@
 class Interface
 {
-   field string welcomeMessage1, welcomeMessage2;
+   field string gameName;
+   field string welcomeMessage1, welcomeMessage2, welcomeMessage3;
    field string scoreMessage;
    field string finalMessage1, finalMessage2, finalMessage3;
-
+   field string winMessage, loseMessage;
    
    
    constructor Interface new()
    {
       // initialize strings
-      let welcomeMessage1 = "Controls: up / down arrows ";
-      let welcomeMessage2 = "Press esc to exit the current race";
+      let gameName = "SPIIIIIIIIN TO WIN";
 
-     
+      let welcomeMessage1 = "Controls: LEFT / RIGHT arrows ";
+      let welcomeMessage2 = "Press ENTER to START ";
+      let welcomeMessage3 = "Press ESC to exit the game";
 
       let scoreMessage = "score: ";
 
-      let finalMessage1 = "You lose";
-      let finalMessage2 = "Your game score: ";
+      let loseMessage = "You LOSE";
+      let winMessage = "You WIN";
+
+      let finalMessage1 = "Your game score: ";
+      let finalMessage2 = "Your height: ";
       let finalMessage3 = "Press enter to continue";
 
 
@@ -28,10 +33,14 @@ class Interface
 
    method void drawWelcomeWindow()
    {
+      do Output.moveCursor(2, 20);
+      do Output.printString(gameName);
       do Output.moveCursor(9, 16);
       do Output.printString(welcomeMessage1);
-      do Output.moveCursor(10, 16);
+      do Output.moveCursor(11, 16);
       do Output.printString(welcomeMessage2);
+      do Output.moveCursor(13, 16);
+      do Output.printString(welcomeMessage3);
       return;
    }
 
@@ -44,13 +53,24 @@ class Interface
       return;
    }
 
-   method void drawFinalWindow(int score)
+   method void drawFinalWindow(int score, int height, boolean win)
    {
+      if (win)
+      {
+         do Output.moveCursor(2, 20);
+         do Output.printString(winMessage);
+      }
+      else
+      {
+         do Output.moveCursor(2, 20);
+         do Output.printString(loseMessage);
+      }
       do Output.moveCursor(10, 18);
       do Output.printString(finalMessage1);
+      do Output.printInt(score);
       do Output.moveCursor(11, 18);
       do Output.printString(finalMessage2);
-      do Output.printInt(score);
+      do Output.printInt(height);
       do Output.moveCursor(12, 18);
       do Output.printString(finalMessage3);
 

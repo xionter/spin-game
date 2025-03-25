@@ -3,14 +3,21 @@ class Game
    field boolean isRunning;
 
    field int enemiesCount, enemySpawnRate;
-   field int score, enemiesSpeed, enemiesAcceleration;
-   field GameInterface gameInterface;
-   field PlayerCar player;
+   field int enemiesSpeed, enemiesAcceleration;
+   
+
+   
    field Array enemies;
    field Array enemySpawnYCoords;
    field Random random;     
-   field Interface interface;
    
+   field Interface interface;
+
+   field Player player;
+   field GameInterface gameInterface;
+   field int score, health, position;
+   field int height;
+   field boolean win;
 
    constructor Game new()
    {
@@ -20,8 +27,12 @@ class Game
       // initialize interface
       let interface = Interface.new();
       
-      // initialize player car
-      let player = PlayerCar.new(26, 96);
+      let win = false;
+
+      // initialize player
+      let health = 3;
+      let player = Player.new(250, 50, 6, 16, 10);
+      let position = 0;
 
       // initialize enemies
       let enemiesCount = 16;
@@ -54,19 +65,18 @@ class Game
    /** Runs the game: handles the user's inputs and moves the car accordingly */
    method void run()
    {
-      var int randomSeed;
       var char key;
 
-      let randomSeed = handleStartGame();
-      let random = Random.new(randomSeed);
-
+      let gameInterface = GameInterface.new();
+      do handleStartGame();
+      do handleStartCutscene();
       let enemiesAcceleration = 123 ;
       let enemySpawnRate = 23;
       
       do handleGameProcess();
 
       do Screen.clearScreen();
-      do interface.drawFinalWindow(score);
+      do interface.drawFinalWindow(score, height, win);
       do handleEndGame();
 
       return;
@@ -75,8 +85,9 @@ class Game
    method void handleGameProcess()
    {
       var char key;
-      var int tick, frame, deadCarsCount;
-
+      var int tick, frame;
+      var int rotation;
+      let rotation = 0;
       let isRunning = true;
       let tick = 0;
       let frame = 0;
@@ -88,23 +99,53 @@ class Game
          if (tick = 2500)
          {
             if (key = 140) { let isRunning = false; }  // esc key
-            if (key = 130) { do player.move(-1, 0); }  // left arrow
-            if (key = 132) { do player.move(1, 0); }  // right arrow   
 
-            do moveEnemies();
+            if (key = 130) 
+            { 
+               if (position = 0) { let rotation = 1; }
+               let position = position + 1;
+               if (position > 3) 
+               { 
+                  let position = 0; 
+                  if (rotation = 1) { let score = score + 100;}
+                  let rotation = 0; 
+               }
+               
+            }  // left arrow
 
-            let deadCarsCount = handleCarsDeaths();
-            let score = score + deadCarsCount;
+            if (key = 132) 
+            { 
+               if (position = 0) { let rotation = 2; }
+               let position = position - 1;
+               if (position = 0)
+               {
+                  if (rotation = 2) { let score = score + 100;}
+                  let rotation = 0; 
+               }
+               if (position < 0) 
+               { 
+                  let position = 3;
+               }
+            }  // right arrow   
+
+
+            // do moveEnemies(); TODO for andrew if height < 1000
 
             do drawFrame();
-            
+            if (height = 1040) 
+            {
+               let isRunning = false;
+               if (position = 0) { let win = true; }
+               if (position = 1) { let win = true; }
+            }
             let tick = 0;
+            let height = height + 10;
             let frame = frame + 1;
          }
 
          if (frame = enemySpawnRate)
          {
-            do trySpawnEnemy();
+            //do trySpawnEnemy();
 
             let frame = 0;
          }
@@ -115,80 +156,57 @@ class Game
       return;
    }
 
-   method void handleSpeedIncreasing(int deadCarsCount)
-   {
-      if (deadCarsCount > 0)
-      {
-         if ((Utils.mod(score, 5) = 0) & (score > 0))
-         {
-            let enemiesSpeed = enemiesSpeed + enemiesAcceleration;
-         }
-      }
 
-      return;
-   }
-
-   method int handleStartGame()
+   method void handleStartGame()
    {
       var char key;
-      var int randomSeed;
 
-      let key = Keyboard.keyPressed();А
+      let key = Keyboard.keyPressed();
       do interface.drawWelcomeWindow();
       while (~(key = 128)) // enter key
       {
          let key = Keyboard.keyPressed();
-         let randomSeed = Utils.mod(randomSeed + 1, 32767);
+         
       }
-      return randomSeed;
+      return;
    }
+
+   method void handleStartCutscene()
+   {
+      var int frame;
+      let frame = 0;
+      while (frame < 170)
+      {
+         do Screen.clearScreen();
+         do player.mainDraw(position);
+         do gameInterface.DrawSky();
+         do Screen.setColor(1);
+         do Screen.drawLine(216 + frame, 83, 386, 83);
+         do Sys.wait(250);
+         let frame = frame + 34;
+      }
+      return;
+   } 
 
    method void handleEndGame()
    {
       while (~(Keyboard.keyPressed() = 128)) { } // enter key
-
       return;
    }
 
    method void drawFrame()
    {
       do Screen.clearScreen();
-      do GameInterface.DrawSky();
-      do player.draw();
-      do drawEnemies();
-      do interface.drawPlayerScore(score);
+      do gameInterface.DrawInterface(health, score, height);
+      do player.mainDraw(position);
+      if (height > 1000)
+      {
+         do Screen.setColor(1);
+         do Screen.drawRectangle(128, 255 - (((height - 1000) / 10) * 43), 386, 255);
+      }
+      //do drawEnemies();
 
       return;
-   }
-
-   method int handleCarsDeaths()
-   {
-      var EnemyCar currentEnemy;
-      var int i, deadCarsCount;
-
-      let i = 0;
-      while (i < enemiesCount)
-      {
-         let currentEnemy = enemies[i];
-
-         if (currentEnemy.isAlive())
-         {
-            if (~(currentEnemy.onScreen()))
-            {
-               let deadCarsCount = deadCarsCount + 1;
-               do currentEnemy.die();
-            }
-            
-            if (conflictHappened(currentEnemy.GetX(), currentEnemy.GetY(), player.GetX(), player.GetY()))
-            {
-               let isRunning = false;
-            }
-         }
-
-         let i = i + 1;
-      }
-
-      return deadCarsCount;
    }
 
    method void moveEnemies()
@@ -281,7 +299,6 @@ class Game
    
    method void dispose()
    {
-      do player.dispose();
       do Memory.deAlloc(enemies);
       do Memory.deAlloc(enemySpawnYCoords);
       do random.dispose();
@@ -291,6 +308,3 @@ class Game
       return;
    }
 }
-
-
-
