@@ -18,9 +18,16 @@ class Player
         return this;
     }
 
-    method void mainDraw(int position)
+    method void mainDraw()
     {
-        do Screen.setColor(true);
+        if (Keyboard.keyPressed() = 133)
+        {
+            do drawBomb();
+            return;    
+        }
+    
+        do updatePosition();
+    
         if (position = 0)
         {
             do draw0();
@@ -37,9 +44,10 @@ class Player
         {
             do draw3();
         }
-
+    
         return;
     }
+
 
     method void draw0()
     {
@@ -170,4 +178,12 @@ class Player
 
         return;
     }
+    
+    method void drawBomb()
+    {
+        do Screen.drawCircle(centralX, centralY, headRadius + 4);
+    
+        return;
+    }
+
 }
