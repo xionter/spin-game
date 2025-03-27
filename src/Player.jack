@@ -18,16 +18,15 @@ class Player
         return this;
     }
 
-    method void mainDraw()
+
+    method void mainDraw(int position)
     {
+        do Screen.setColor(true);
         if (Keyboard.keyPressed() = 133)
         {
             do drawBomb();
             return;    
         }
-    
-        do updatePosition();
-    
         if (position = 0)
         {
             do draw0();
@@ -44,7 +43,7 @@ class Player
         {
             do draw3();
         }
-    
+
         return;
     }
 
@@ -178,6 +177,7 @@ class Player
 
         return;
     }
+    
     
     method void drawBomb()
     {
