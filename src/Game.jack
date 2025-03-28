@@ -136,7 +136,7 @@ class Game
             {
                let isRunning = false;
                if (position = 0) { let win = true; }
-               if (position = 1) { let win = true; }
+               if (position = 2) { let win = true; }
             }
             let tick = 0;
             let height = height + 10;
