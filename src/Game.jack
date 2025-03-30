@@ -16,7 +16,7 @@ class Game
     constructor Game new()
     {
         var int birdX, birdY, birdSpeedX, birdSpeedY;
-        let birdX = 50; let birdY = 175; let birdSpeedX = 2; let birdSpeedY = -1;
+        let birdX = 450; let birdY = 175; let birdSpeedX = -2; let birdSpeedY = -1;
 
         let interface = Interface.new();
 
@@ -114,7 +114,7 @@ class Game
             {
                 do bird.move();
 
-                if (canTakeDamage & (bird.getX() > 240)) // Collision
+                if (canTakeDamage & (Utils.abs(250 - bird.getX()) < 10)) // Collision
                 {
                     let health = health - 1;
                     do bird.setAlive(false);
@@ -129,12 +129,21 @@ class Game
             if (~bird.getAlive())
             {
                 let respawnTimer = respawnTimer - 1;
-                if (respawnTimer = 0)
+                if (respawnTimer = 0 & (Utils.mod(tick, 37) > 18))
+                {
+                    do bird.setAlive(true);
+                    do bird.setX(450);
+                    do bird.setY(175);
+                    do bird.setSpeedX(-2);
+                }
+                if (respawnTimer = 0 & (Utils.mod(tick, 37) < 18))
                 {
                     do bird.setAlive(true);
                     do bird.setX(50);
                     do bird.setY(175);
+                    do bird.setSpeedX(2);
                 }
+
             }
 
             let tick = tick + 1;

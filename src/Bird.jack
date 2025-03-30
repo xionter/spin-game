@@ -1,7 +1,6 @@
 class Bird
 {
     field int birdX, birdY;
-    field int xSize, ySize;
     field int birdSpeedX, birdSpeedY;
     field boolean isAlive;
     constructor Bird new(int X, int Y, int BirdSpeedX, int BirdSpeedY)
@@ -20,19 +19,17 @@ class Bird
         return;
     }
 
-    method boolean onScreen()
-    {
-        return ((1 < birdX) & (birdX + xSize < 508)) & 
-                ((1 < birdY) & (birdY + ySize) < 255);
-    }
 
     method int getX(){ return birdX;}
     method int getY(){ return birdY;}
     method void setX(int X){ let birdX = X; return;}
     method void setY(int Y){ let birdY = Y; return;}
 
+    method void setSpeedX(int X){ let birdSpeedX = X; return;}
+
     method int getAlive(){ return isAlive;}
     method void setAlive(boolean flag){ let isAlive = flag; return;}
+
 
     method void draw()
     {
