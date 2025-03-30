@@ -130,7 +130,7 @@ class Game
                 if ((Utils.abs(250 - bird.getX()) < 10)) // Collision
                 {
                     do bird.setAlive(false);
-                    let respawnTimer = 120; 
+                    let respawnTimer = 250; 
                     if (canTakeDamage)
                     {
                         let health = health - 1;

@@ -1,6 +1,7 @@
 class GameInterface
 {
     field string scoreMessage, heightMessage;
+    field int diff;
 
     constructor GameInterface new()
     {
@@ -14,6 +15,7 @@ class GameInterface
         do DrawBorders();
         do DrawHealth(health);
         do DrawScore(score, height);
+        do makeDiff();
         do DrawSky(height);
         return;
     }
@@ -56,14 +58,27 @@ class GameInterface
     {
          var int i;
          
-         let i = 0;
-         while (i + 40 < 255)
+         let i = diff;
+         do Screen.setColor(1);
+         while (i + 20 < 255)
          {
-            do Screen.drawLine(156, i, 156, i + (40-1));
-            do Screen.drawLine(358, i, 358, i + (40-1));
-            let i = i + 30;
+            do Screen.drawLine(184, i, 184, i + 19);
+            do Screen.drawLine(330, i, 330, i + 14);
+            let i = i + 50;
          }
          return;
+    }
+
+    method void makeDiff()
+    {
+      let diff = diff + 10;
+
+      if (diff > (49))
+      {
+         let diff = diff - 50;
+      }
+
+      return;
     }
 
     method void DrawScore(int gameScore, int height)
