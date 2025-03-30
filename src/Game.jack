@@ -54,10 +54,10 @@ class Game
     method void handleGameProcess()
     {
         var char key;
-        var int tick, frame;
+        var int tick;
         var int rotation;
         var int respawnTimer;
-        let tick = 0; let frame = 0;
+        let tick = 0;
         let rotation = 0;
         let respawnTimer = 0;
 
@@ -66,64 +66,82 @@ class Game
         while (isRunning)
         {
             let key = Keyboard.keyPressed();
-
-            if (tick = 2500)
+            
+            if (tick = 3000)
             {
+                
                 if (key = 140) { let isRunning = false; }  // esc key
-
-                if (key = 130) 
-                { 
-                    if (position = 0) { let rotation = 1; }
-                    let position = position + 1;
-                    if (position > 3) 
-                    { 
-                        let position = 0; 
-                        if (rotation = 1) { let score = score + 100;}
-                        let rotation = 0; 
-                    }
-                }  // left arrow
-
-                if (key = 132) 
-                { 
-                    if (position = 0) { let rotation = 2; }
-                    let position = position - 1;
-                    if (position = 0)
-                    {
-                        if (rotation = 2) { let score = score + 100;}
-                        let rotation = 0; 
-                    }
-                    if (position < 0) 
-                    { 
-                        let position = 3;
-                    }
-                }  
-
-                do drawFrame();
+                if (Keyboard.keyPressed() = 133)
+                {
+                  if (canTakeDamage)
+                  {
+                     do player.drawBomb();
+                     let canTakeDamage = false;
+                  }
+                  else { let canTakeDamage = true;}
+                }
+                if (canTakeDamage)
+                {
+                     if (key = 130) 
+                     { 
+                        if (position = 0) { let rotation = 1; }
+                        let position = position + 1;
+                        if (position > 3) 
+                        { 
+                              let position = 0; 
+                              if (rotation = 1) { let score = score + 100;}
+                              let rotation = 0; 
+                        }
+                     }  // left arrow
+                     
+                     if (key = 132) 
+                     { 
+                        if (position = 0) { let rotation = 2; }
+                        let position = position - 1;
+                        if (position = 0)
+                        {
+                              if (rotation = 2) { let score = score + 100;}
+                              let rotation = 0; 
+                        }
+                        if (position < 0) 
+                        { 
+                              let position = 3;
+                        }
+                     }  // right arrow
+                }
                 if (height = 1040) 
                 {
                     let isRunning = false;
-                    if (position = 0) { let win = true; }
-                    if (position = 1) { let win = true; }
+                    if (canTakeDamage)
+                    {
+                        if (position = 0) { let win = true; }
+                        if (position = 2) { let win = true; }
+                    }
                 }
+                do drawFrame();
                 let tick = 0;
                 let height = height + 10;
-                let frame = frame + 1;
             }
 
             if (bird.getAlive() & (Utils.mod(tick, 190) = 0))
             {
                 do bird.move();
 
-                if (canTakeDamage & (Utils.abs(250 - bird.getX()) < 10)) // Collision
+                if ((Utils.abs(250 - bird.getX()) < 10)) // Collision
                 {
-                    let health = health - 1;
                     do bird.setAlive(false);
-                    let respawnTimer = 100; 
-                    if (health = 0)
+                    let respawnTimer = 120; 
+                    if (canTakeDamage)
                     {
-                        let isRunning = false;
+                        let health = health - 1;
+                        if (health = 0)
+                        {
+                           let isRunning = false;
+                        }
                     }
+                    else { let score = score + 100; }
                 }
+
             }
 
             if (~bird.getAlive())
@@ -146,16 +164,24 @@ class Game
 
             }
 
-            let tick = tick + 1;
+            let tick = tick + 2;
         }
         return;
     }
+
     method void drawFrame()
     {
         do Screen.clearScreen();
         do gameInterface.DrawInterface(health, score, height);
-        do player.mainDraw(position);
-        
+        if (canTakeDamage)
+        {
+            do player.mainDraw(position);
+        }
+        else
+        {
+            do Screen.setColor(1);
+            do player.drawBomb();
+        }
         do bird.draw(); 
 
         if (height > 1000)
@@ -170,12 +196,12 @@ class Game
     method void dispose()
     {
         do Memory.deAlloc(bird);
-        do random.dispose();
         do interface.dispose();
         do Memory.deAlloc(this);
 
         return;
     }
+
     method void handleStartGame()
     {
         var char key;
@@ -188,27 +214,36 @@ class Game
         }
         return;
     }
-
+    
+    
     method void handleStartCutscene()
     {
-        var int frame;
-        let frame = 0;
-        while (frame < 170)
+        var int tick;
+        let tick = 0;
+        while (tick < 170)
         {
             do Screen.clearScreen();
             do player.mainDraw(position);
-            do gameInterface.DrawSky();
+            do gameInterface.DrawBorders();
             do Screen.setColor(1);
-            do Screen.drawLine(216 + frame, 83, 386, 83);
+            do Screen.drawLine(216 + tick, 83, 386, 83);
             do Sys.wait(250);
-            let frame = frame + 34;
+            let tick = tick + 34;
         }
         return;
     } 
 
     method void handleEndGame()
     {
-        while (~(Keyboard.keyPressed() = 128)) { } // enter key
+        while (~(Keyboard.keyPressed() = 128)) 
+        { 
+            let height = 0;
+            let score = 0;
+            let health = 3;
+            let position = 0;
+            let canTakeDamage = true;
+            let isRunning = true;
+        } // enter key
         return;
     }
 }

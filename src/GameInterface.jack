@@ -11,13 +11,14 @@ class GameInterface
 
     method void DrawInterface(int health, int score, int height)
     {
-        do DrawSky();
+        do DrawBorders();
         do DrawHealth(health);
         do DrawScore(score, height);
+        do DrawSky(height);
         return;
     }
 
-    method void DrawSky()
+    method void DrawBorders()
     {
         do Screen.setColor(1);
         do Screen.drawLine(128, 0, 128, 255);
@@ -49,6 +50,20 @@ class GameInterface
             do Screen.drawCircle(400, 10, 4);
         }
         return;
+    }
+
+    method void DrawSky(int height)
+    {
+         var int i;
+         
+         let i = 0;
+         while (i + 40 < 255)
+         {
+            do Screen.drawLine(156, i, 156, i + (40-1));
+            do Screen.drawLine(358, i, 358, i + (40-1));
+            let i = i + 30;
+         }
+         return;
     }
 
     method void DrawScore(int gameScore, int height)

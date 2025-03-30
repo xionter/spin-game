@@ -18,16 +18,6 @@ class Player
         return this;
     }
 
-    method int GetX()
-    {
-        return centralX;
-    }
-
-    method int GetY()
-    {
-        return centralY;
-    }
-
 
     method void mainDraw(int position)
     {
@@ -51,6 +41,7 @@ class Player
 
         return;
     }
+
 
     method void draw0()
     {
@@ -109,6 +100,7 @@ class Player
         //рука1
         do Screen.drawLine(headX - 8 + 2, headY + headRadius + 8, headX - 8 + 2 + limbYLength, headY + headRadius + 8 - 5);
         do Screen.drawLine(headX - 8 + 2, headY + headRadius + 8 + 1, headX - 8 + 2 + limbYLength, headY + headRadius + 8 + 1 - 5);
+        
 
         //рука1
         do Screen.drawLine(headX - 8 + 2, headY + headRadius + 8, headX - 8 + 2 + limbYLength, headY + headRadius + 8 + 5);
@@ -181,4 +173,13 @@ class Player
 
         return;
     }
+    
+    
+    method void drawBomb()
+    {
+        do Screen.drawCircle(centralX, centralY, headRadius + 4);
+    
+        return;
+    }
+
 }
