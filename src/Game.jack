@@ -53,10 +53,11 @@ class Game
 
     method void handleGameProcess()
     {
-        var char key;
         var int tick;
         var int rotation;
         var int respawnTimer;
+        var char key;
+
         let tick = 0;
         let rotation = 0;
         let respawnTimer = 0;
@@ -65,51 +66,51 @@ class Game
 
         while (isRunning)
         {
-            let key = Keyboard.keyPressed();
             
-            if (tick = 3000)
+            if (tick = 1200)
             {
-                
+                let key = Keyboard.keyPressed();
                 if (key = 140) { let isRunning = false; }  // esc key
-                if (Keyboard.keyPressed() = 133)
+                if (key = 133)
                 {
-                  if (canTakeDamage)
-                  {
-                     do player.drawBomb();
-                     let canTakeDamage = false;
-                  }
-                  else { let canTakeDamage = true;}
+                    if (canTakeDamage)
+                    {
+                        do player.drawBomb();
+                        let canTakeDamage = false;
+                    }
+                    else { let canTakeDamage = true;}
                 }
                 if (canTakeDamage)
                 {
-                     if (key = 130) 
-                     { 
+                    if (key = 130) 
+                    { 
                         if (position = 0) { let rotation = 1; }
                         let position = position + 1;
                         if (position > 3) 
                         { 
-                              let position = 0; 
-                              if (rotation = 1) { let score = score + 100;}
-                              let rotation = 0; 
+                            let position = 0; 
+                            if (rotation = 1) { let score = score + 100;}
+                            let rotation = 0; 
                         }
-                     }  // left arrow
-                     
-                     if (key = 132) 
-                     { 
+                    }  // left arrow
+                    
+                    if (key = 132) 
+                    { 
                         if (position = 0) { let rotation = 2; }
                         let position = position - 1;
                         if (position = 0)
                         {
-                              if (rotation = 2) { let score = score + 100;}
-                              let rotation = 0; 
+                            if (rotation = 2) { let score = score + 100;}
+                            let rotation = 0; 
                         }
                         if (position < 0) 
                         { 
-                              let position = 3;
+                            let position = 3;
                         }
-                     }  // right arrow
+                    }  // right arrow
                 }
-                if (height = 1040) 
+                
+                if (height = 1160) 
                 {
                     let isRunning = false;
                     if (canTakeDamage)
@@ -164,7 +165,7 @@ class Game
 
             }
 
-            let tick = tick + 2;
+            let tick = tick + 1;
         }
         return;
     }
@@ -187,7 +188,7 @@ class Game
         if (height > 1000)
         {
             do Screen.setColor(1);
-            do Screen.drawRectangle(128, 255 - (((height - 1000) / 10) * 43), 386, 255);
+            do Screen.drawRectangle(128, 255 - (((height - 1000) / 10) * 11), 386, 255);
         }
 
         return;

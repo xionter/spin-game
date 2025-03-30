@@ -64,18 +64,18 @@ class GameInterface
          {
             do Screen.drawLine(184, i, 184, i + 19);
             do Screen.drawLine(330, i, 330, i + 14);
-            let i = i + 50;
+            let i = i + 100;
          }
          return;
     }
 
     method void makeDiff()
     {
-      let diff = diff + 10;
+      let diff = diff + 50;
 
-      if (diff > (49))
+      if (diff > (99))
       {
-         let diff = diff - 50;
+         let diff = diff - 100;
       }
 
       return;
