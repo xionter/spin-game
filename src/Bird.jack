@@ -1,12 +1,15 @@
 class Bird
 {
-    field int x, y;
+    field int birdX, birdY;
     field int xSize, ySize;
+    field int birdSpeedX, birdSpeedY;
     field boolean isAlive;
-    constructor Bird new(int X, int Y)
+    constructor Bird new(int X, int Y, int BirdSpeedX, int BirdSpeedY)
     {
-        let x = X;
-        let y = Y;
+        let birdX = X;
+        let birdY = Y;
+        let birdSpeedX = BirdSpeedX;
+        let birdSpeedY = BirdSpeedY;
         let isAlive = true;
         return this;
     }
@@ -19,43 +22,17 @@ class Bird
 
     method boolean onScreen()
     {
-        return ((1 < x) & (x + xSize < 508)) & 
-                ((1 < y) & (y + ySize) < 255);
+        return ((1 < birdX) & (birdX + xSize < 508)) & 
+                ((1 < birdY) & (birdY + ySize) < 255);
     }
 
-    method int GetX()
-    {
-        return x;
-    }
+    method int getX(){ return birdX;}
+    method int getY(){ return birdY;}
+    method void setX(int X){ let birdX = X; return;}
+    method void setY(int Y){ let birdY = Y; return;}
 
-    method int GetY()
-    {
-        return y;
-    }
-
-    method void SetX(int X)
-    {
-        let x = X;
-        return;
-    }
-    
-    method void SetY(int Y)
-    {
-        let y = Y;
-        return;
-    }
-
-
-    method boolean GetAlive()
-    {
-        return isAlive;
-    }
-
-    method void setAlive(boolean flag)
-    {
-        let isAlive = flag;
-        return;
-    }
+    method int getAlive(){ return isAlive;}
+    method void setAlive(boolean flag){ let isAlive = flag; return;}
 
     method void draw()
     {
@@ -65,17 +42,14 @@ class Bird
         }
 
         do Screen.setColor(true);
-        // Simple bird drawing - triangle for now
-        do Screen.drawLine(x, y, x + xSize, y + (ySize / 2));
-        do Screen.drawLine(x + xSize, y + (ySize / 2), x, y + ySize);
-        do Screen.drawLine(x, y + ySize, x, y);
+        do Screen.drawCircle(birdX, birdY, 6);
         return;
     }
 
-    method void move(int dx, int dy)
+    method void move()
     {
-        let x = x + dx;
-        let y = y + dy;
+        let birdX = birdX + birdSpeedX;
+        let birdY = birdY + birdSpeedY;
         return;
     }
 

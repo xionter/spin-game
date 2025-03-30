@@ -2,43 +2,33 @@ class Game
 {
     field boolean isRunning;
 
-    field int birdStartX, birdStartY;
-    field int birdSpeedX, birdSpeedY; 
-    field int birdTiming; 
-    field int birdSpawnTimer; 
-
     field Bird bird; 
-    field Random random;     
 
     field Interface interface;
+    field GameInterface gameInterface;
 
     field Player player;
-    field GameInterface gameInterface;
     field int score, health, position;
+    field boolean canTakeDamage;
     field int height;
     field boolean win;
 
     constructor Game new()
     {
-        // initialize interface
+        var int birdX, birdY, birdSpeedX, birdSpeedY;
+        let birdX = 50; let birdY = 175; let birdSpeedX = 2; let birdSpeedY = -1;
+
         let interface = Interface.new();
 
         let win = false;
 
-        // initialize player
         let health = 3;
+        let canTakeDamage = true;
         let player = Player.new(250, 50, 6, 16, 10);
         let position = 0;
 
-        //init bird fields
-        let birdSpeedX = 2; 
-        let birdSpeedY = 1;
-        let birdTiming = 100;
-        let birdSpawnTimer = 0;
-        let bird = Bird.new(0, 0);
-        do bird.die();
+        let bird = Bird.new(birdX, birdY, birdSpeedX, birdSpeedY);
 
-        // initialize player score
         let score = 0;
 
         return this;
@@ -61,17 +51,17 @@ class Game
         return;
     }
 
-
     method void handleGameProcess()
     {
         var char key;
-        var int tick, birdTick, frame;
+        var int tick, frame;
         var int rotation;
+        var int respawnTimer;
+        let tick = 0; let frame = 0;
         let rotation = 0;
+        let respawnTimer = 0;
+
         let isRunning = true;
-        let tick = 0;
-        let birdTick = 0;
-        let frame = 0;
 
         while (isRunning)
         {
@@ -108,25 +98,6 @@ class Game
                     }
                 }  
 
-                if (bird.GetAlive())
-                {
-                    do bird.move(birdSpeedX, 0);
-
-                    if ((birdSpeedX > 0 & bird.GetX() > 510) | 
-                            (birdSpeedX < 0 & bird.GetX() < -16))
-                    {
-                        do bird.die();
-                    }
-                }
-
-
-                let birdSpawnTimer = birdSpawnTimer + 1;
-                if (birdSpawnTimer > 100)  
-                {
-                    do trySpawnBird();
-                    let birdSpawnTimer = 0;
-                }
-
                 do drawFrame();
                 if (height = 1040) 
                 {
@@ -138,67 +109,55 @@ class Game
                 let height = height + 10;
                 let frame = frame + 1;
             }
-            
-            // Add this block to draw bird every 500 ticks
-            if (birdTick > 500)
+
+            if (bird.getAlive() & (Utils.mod(tick, 190) = 0))
             {
-                if (bird.GetAlive())
+                do bird.move();
+
+                if (canTakeDamage & (bird.getX() > 240)) // Collision
                 {
-                    do bird.draw();
+                    let health = health - 1;
+                    do bird.setAlive(false);
+                    let respawnTimer = 100; 
+                    if (health = 0)
+                    {
+                        let isRunning = false;
+                    }
                 }
-                let birdTick = 0;
+            }
+
+            if (~bird.getAlive())
+            {
+                let respawnTimer = respawnTimer - 1;
+                if (respawnTimer = 0)
+                {
+                    do bird.setAlive(true);
+                    do bird.setX(50);
+                    do bird.setY(175);
+                }
             }
 
             let tick = tick + 1;
-            let birdTick = birdTick + 1;
-
         }
         return;
     }
-
-
-    method void trySpawnBird()
-    {
-        if (~bird.GetAlive())
-        {
-            let birdStartX = 0;
-            let birdSpeedX = 2; 
-
-            let birdStartY = 50; 
-
-            do bird.setAlive(true);
-            do bird.SetX(birdStartX);
-            do bird.SetY(birdStartY);
-        }
-        return;
-    }
-
     method void drawFrame()
     {
         do Screen.clearScreen();
         do gameInterface.DrawInterface(health, score, height);
         do player.mainDraw(position);
+        
+        do bird.draw(); 
+
         if (height > 1000)
         {
             do Screen.setColor(1);
             do Screen.drawRectangle(128, 255 - (((height - 1000) / 10) * 43), 386, 255);
         }
 
-        // Draw bird if alive
-        if (bird.GetAlive())
-        {
-            do bird.draw();
-        }
-
         return;
     }
     
-    method boolean checkBirdCollision()
-    {
-        return false;
-        //TODO
-    }
-
     method void dispose()
     {
         do Memory.deAlloc(bird);
@@ -214,10 +173,9 @@ class Game
 
         let key = Keyboard.keyPressed();
         do interface.drawWelcomeWindow();
-        while (~(key = 128)) // enter key
+        while (~(key = 128)) 
         {
             let key = Keyboard.keyPressed();
-
         }
         return;
     }
