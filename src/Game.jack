@@ -124,11 +124,11 @@ class Game
                 let height = height + 10;
             }
 
-            if (bird.getAlive() & (Utils.mod(tick, 190) = 0))
+            if (bird.getAlive() & (Tools.mod(tick, 190) = 0))
             {
                 do bird.move();
 
-                if ((Utils.abs(250 - bird.getX()) < 10)) // Collision
+                if ((Tools.abs(250 - bird.getX()) < 10)) // Collision
                 {
                     do bird.setAlive(false);
                     let respawnTimer = 250; 
@@ -148,14 +148,14 @@ class Game
             if (~bird.getAlive())
             {
                 let respawnTimer = respawnTimer - 1;
-                if (respawnTimer = 0 & (Utils.mod(tick, 37) > 18))
+                if (respawnTimer = 0 & (Tools.mod(tick, 37) > 18))
                 {
                     do bird.setAlive(true);
                     do bird.setX(450);
                     do bird.setY(175);
                     do bird.setSpeedX(-2);
                 }
-                if (respawnTimer = 0 & (Utils.mod(tick, 37) < 18))
+                if (respawnTimer = 0 & (Tools.mod(tick, 37) < 18))
                 {
                     do bird.setAlive(true);
                     do bird.setX(50);
@@ -236,6 +236,7 @@ class Game
 
     method void handleEndGame()
     {
+        do game.dispose();
         while (~(Keyboard.keyPressed() = 128)) 
         { 
             let height = 0;
