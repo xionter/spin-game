@@ -26,8 +26,11 @@
 
 ## **Управление**:
 Left arrow \ Right arrow - поворот влево и вправо соответственно
+
 Down arrow - форма "[BOMBA](https://www.figma.com/design/tlC1sJFfq4tC0Up6ZHAoih/Untitled?node-id=0-1&p=f&t=jfRVpCkDae9rCy35-0)"
+
 ENTER - для старта игры
+
 ESC - выход из игры
 
 
