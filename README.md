@@ -31,4 +31,4 @@ ENTER - для старта игры
 ESC - выход из игры
 
 
-#Огромное спасибо каналу *[b1tuha_show](https://youtube.com/shorts/w6OQB29ciis?si=RFm-sC70KCTBOUdw)* за вдохновляющие видео
+### Огромное спасибо каналу *[b1tuha_show](https://youtube.com/shorts/w6OQB29ciis?si=RFm-sC70KCTBOUdw)* за вдохновляющие видео
