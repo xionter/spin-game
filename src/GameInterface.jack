@@ -95,6 +95,8 @@ class GameInterface
     method void dispose()
    {
       do Memory.deAlloc(scoreMessage);
+      do Memory.deAlloc(heightMessage);
+      do Memory.deAlloc(diff);
       do Memory.deAlloc(this);
       return;
    }

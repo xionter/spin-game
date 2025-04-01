@@ -67,7 +67,7 @@ class Game
         while (isRunning)
         {
             
-            if (tick = 1200)
+            if (tick = 1500)
             {
                 let key = Keyboard.keyPressed();
                 if (key = 140) { let isRunning = false; }  // esc key
@@ -236,7 +236,7 @@ class Game
 
     method void handleEndGame()
     {
-        do game.dispose();
+        
         while (~(Keyboard.keyPressed() = 128)) 
         { 
             let height = 0;
@@ -246,6 +246,7 @@ class Game
             let canTakeDamage = true;
             let isRunning = true;
         } // enter key
+
         return;
     }
 }
