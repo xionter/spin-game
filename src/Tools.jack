@@ -9,18 +9,16 @@ class Tools
         return num;
     }
 
-    function int mod(int num, int divider)
+    function int mod(int num, int divider) 
     {
-        while (num >= divider)
+        var int res;
+
+        if (divider = 0)
         {
-            let num = num - divider;
+            return 0;  
         }
 
-        while (num < 0)
-        {
-            let num = num + divider;
-        }
-
-        return num;
+        let res = num / divider;
+        return num - (res * divider);
     }
 }
