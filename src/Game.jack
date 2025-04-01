@@ -46,7 +46,6 @@ class Game
 
         do Screen.clearScreen();
         do interface.drawFinalWindow(score, height, win);
-        do handleEndGame();
 
         return;
     }
@@ -131,7 +130,7 @@ class Game
                 if ((Tools.abs(250 - bird.getX()) < 10)) // Collision
                 {
                     do bird.setAlive(false);
-                    let respawnTimer = 250; 
+                    let respawnTimer = 10000; 
                     if (canTakeDamage)
                     {
                         let health = health - 1;
@@ -233,19 +232,4 @@ class Game
         }
         return;
     } 
-
-    method void handleEndGame()
-    {
-        do game.dispose();
-        while (~(Keyboard.keyPressed() = 128)) 
-        { 
-            let height = 0;
-            let score = 0;
-            let health = 3;
-            let position = 0;
-            let canTakeDamage = true;
-            let isRunning = true;
-        } // enter key
-        return;
-    }
 }
