@@ -8,13 +8,11 @@ class Tools
         }
         return num;
     }
-
-    function int mod(int num, int divider) 
-    {
+    
+    function int mod(int num, int divider) {
         var int res;
 
-        if (divider = 0)
-        {
+        if (divider = 0) {
             return 0;  
         }
 
