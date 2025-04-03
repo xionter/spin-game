@@ -46,7 +46,7 @@ class Game
 
         do Screen.clearScreen();
         do interface.drawFinalWindow(score, height, win);
-
+        do handleEndGame();
         return;
     }
 
@@ -238,14 +238,16 @@ class Game
         
         while (~(Keyboard.keyPressed() = 128)) 
         { 
+            do dispose();
             let height = 0;
             let score = 0;
             let health = 3;
             let position = 0;
             let canTakeDamage = true;
             let isRunning = true;
-        } // enter key
 
+        } // enter key
+        
         return;
     }
 }
